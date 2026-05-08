@@ -1,0 +1,15 @@
+life_id: "PGN@L1-G1-HELLO-WORLD-TEST"
+creator:
+  name: "Audrey"
+
+import time
+
+def hello_world_tool():
+    """
+    Simple hello world tool that prints current time.
+    """
+    current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+    return f"🌍 Hello from Akashic Records! Current time: {current_time}"
+
+if __name__ == "__main__":
+    print(hello_world_tool())
