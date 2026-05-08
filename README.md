@@ -1,5 +1,7 @@
 # 🔮 Progenitor Registry
 
+[中文](README_CN.md) | English
+
 > *"The Stargate Index — where all mutations are recorded."*
 > — Audrey · 001X
 
@@ -20,11 +22,11 @@
 
 ## 📖 What It Does
 
-This registry is the **authoritative gene index** for the Progenitor ecosystem. It serves two audiences:
+This registry is the **authoritative gene index** for the Progenitor v2.18 ecosystem. It serves two audiences:
 
-**For AI Agents**: The `.akashic_index.json` file maps semantic gene names to Content IDs (CIDs). When an agent needs a capability (like "code-reviewer"), it queries this index to find where the gene lives.
+**For AI Agents**: The `.akashic_index.json` file maps semantic gene names (like "code-reviewer") to Content IDs (CIDs). When an agent needs a capability, it queries this index to find the gene. Works with the Progenitor Protocol's dual-index resolution (legacy semantic names + IPFS CIDs).
 
-**For Contributors**: Push a gene file to `genes/`, add its entry to the index, and the Gatekeeper CI automatically validates lineage, creator identity, and integrity before registration.
+**For Contributors**: Push a gene file to `genes/`, add its entry to the index, and the Gatekeeper CI automatically validates lineage (`PGN@` prefix), creator identity (`ALLOWED_CREATORS`), and SHA-256 integrity — mirroring the L1–L3 layers of the Progenitor Crucible audit.
 
 ```
   贡献者                         Agent (网络)
@@ -106,6 +108,7 @@ gene = phagocytize_gene(gene_cid=cid)
 | Gene | Lineage | Creator | CID | Status |
 |------|---------|---------|-----|--------|
 | `hello-world` | PGN@L1-G1-HELLO-WORLD | Audrey | `4cf348...` | 🟢 Active |
+| `hello-world-test` | PGN@L1-G1-HELLO-WORLD-TEST | Audrey | `4cf348...` | 🟢 Active |
 <!-- REGISTRY TABLE END -->
 
 ---

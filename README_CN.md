@@ -1,5 +1,7 @@
 # 🔮 Progenitor Registry · 星门索引矩阵
 
+[English](README.md) | 中文
+
 > *"星门索引——记录所有变异的地方。"*
 > —— Audrey · 001X
 
@@ -20,11 +22,11 @@
 
 ## 📖 功能
 
-本注册表是 Progenitor 生态系统的**权威基因索引**，服务两类用户：
+本注册表是 Progenitor v2.18 生态系统的**权威基因索引**，服务两类用户：
 
-**面向 AI Agent**：`.akashic_index.json` 文件将语义基因名映射到内容标识符（CID）。当 Agent 需要某个能力（如 "code-reviewer"），查询此索引即可定位基因位置。
+**面向 AI Agent**：`.akashic_index.json` 文件将语义基因名（如 "code-reviewer"）映射到内容标识符（CID）。当 Agent 需要某个能力，查询此索引即可定位基因。支持 Progenitor Protocol 的双索引解析（语义名 + IPFS CID 兼容）。
 
-**面向贡献者**：将基因文件推送到 `genes/` 目录，在索引中注册，星门守卫 CI 会自动验证谱系、创造者身份和数据完整性，然后完成注册。
+**面向贡献者**：将基因文件推送到 `genes/` 目录，在索引中注册，星门守卫 CI 会自动验证谱系（`PGN@` 前缀）、创造者身份（`ALLOWED_CREATORS`）和 SHA-256 数据完整性——与 Progenitor 熔炉审计的 L1–L3 层对应。
 
 ```
   贡献者                         Agent（网络）
@@ -106,6 +108,7 @@ gene = phagocytize_gene(gene_cid=cid)
 | 基因名 | 谱系 | 创造者 | CID | 状态 |
 |--------|------|--------|-----|------|
 | `hello-world` | PGN@L1-G1-HELLO-WORLD | Audrey | `4cf348...` | 🟢 活跃 |
+| `hello-world-test` | PGN@L1-G1-HELLO-WORLD-TEST | Audrey | `4cf348...` | 🟢 活跃 |
 <!-- REGISTRY TABLE END -->
 
 ---
