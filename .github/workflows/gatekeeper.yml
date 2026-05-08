@@ -1,0 +1,32 @@
+name: "🛡️ 星门守卫流水线"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "genes/**"
+      - ".akashic_index.json"
+  pull_request:
+    paths:
+      - "genes/**"
+      - ".akashic_index.json"
+
+jobs:
+  gatekeeper:
+    name: "🧬 基因熔炉校验"
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "📥 签出代码"
+        uses: actions/checkout@v4
+
+      - name: "🐍 设置 Python 3.11"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: "🛡️ 执行星门守卫校验"
+        run: python3 .github/workflows/gatekeeper.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMIT_BRANCH: ${{ github.ref_name }}
