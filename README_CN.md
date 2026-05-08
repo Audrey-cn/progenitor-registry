@@ -1,73 +1,113 @@
 # 🔮 Progenitor Registry · 星门索引矩阵
 
 > *"星门索引——记录所有变异的地方。"*
-> —— Progenitor 始源协议 · 创造者 Audrey · 001X
+> —— Audrey · 001X
 
 [![Progenitor](https://img.shields.io/badge/Progenitor-L1--G1--INDEX-2448B98A?labelColor=1a1a2e&color=gold)](https://github.com/Audrey-cn/progenitor-registry)
-[![Role](https://img.shields.io/badge/Role-Stargate_Index-indigo?style=flat-square)](https://github.com/Audrey-cn/progenitor-registry)
-[![Automation](https://img.shields.io/badge/Gatekeeper-Active-green?labelColor=1a1a2e)](.github/workflows/gatekeeper.yml)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?labelColor=1a1a2e&logo=python)](https://python.org)
+[![Gatekeeper](https://img.shields.io/badge/Gatekeeper-Active-green?labelColor=1a1a2e)](.github/workflows/gatekeeper.yml)
 
 ---
 
-## 🔮 三位一体矩阵导航
+## 🔮 生态矩阵
 
-| 矩阵 | 角色 | 仓库 |
+| 仓库 | 角色 | 链接 |
 |------|------|------|
-| 🧬 **Progenitor Protocol** | 始源引擎 | [![GitHub](https://img.shields.io/badge/GitHub-Audrey--cn%2Fprogenitor--protocol-blue?logo=github)](https://github.com/Audrey-cn/progenitor-protocol) |
-| 🔮 **Progenitor Registry** | 星门索引 | [![GitHub](https://img.shields.io/badge/GitHub-Audrey--cn%2Fprogenitor--registry-blue?logo=github)](https://github.com/Audrey-cn/progenitor-registry) |
-| 🌌 **Progenitor Akashic** | 存储节点 | [![GitHub](https://img.shields.io/badge/GitHub-Audrey--cn%2Fprogenitor--akashic-blue?logo=github)](https://github.com/Audrey-cn/progenitor-akashic) |
+| 🧬 **Protocol** | 始源引擎 | [Audrey-cn/progenitor-protocol](https://github.com/Audrey-cn/progenitor-protocol) |
+| 🔮 **Registry** | 基因索引（当前页面） | [Audrey-cn/progenitor-registry](https://github.com/Audrey-cn/progenitor-registry) |
+| 🌌 **Akashic** | 存储节点 | [Audrey-cn/progenitor-akashic](https://github.com/Audrey-cn/progenitor-akashic) |
 
 ---
 
-## 📖 概述
+## 📖 功能
 
-**Progenitor Registry** 是**星门索引矩阵**—— Progenitor 生态系统中所有已注册基因变体的权威来源。
+本注册表是 Progenitor 生态系统的**权威基因索引**，服务两类用户：
 
-本仓库承担以下职责：
-- 📋 **黄页**: `.akashic_index.json` 将语义名称映射到 CID
-- 🧬 **基因库**: `genes/{CID}` 存储实际基因载荷
-- ✅ **星门守卫**: 自动化 CI/CD 验证并注册新变异
+**面向 AI Agent**：`.akashic_index.json` 文件将语义基因名映射到内容标识符（CID）。当 Agent 需要某个能力（如 "code-reviewer"），查询此索引即可定位基因位置。
+
+**面向贡献者**：将基因文件推送到 `genes/` 目录，在索引中注册，星门守卫 CI 会自动验证谱系、创造者身份和数据完整性，然后完成注册。
+
+```
+  贡献者                         Agent（网络）
+  ──────                        ───────────
+  推送 Gene → genes/{CID}       查询能力名 "hello-world"
+               ↓                    ↓
+          星门守卫 CI           读取 .akashic_index.json
+          ├─ L1 哈希校验            ↓
+          ├─ L2 血脉检查         映射到 CID
+          └─ L3 创造者审核          ↓
+               ↓                拉取 genes/{CID}
+          索引更新 ✅             本地执行 💾
+```
 
 ---
 
-## 🗂️ 注册表结构
+## 🗂️ 结构
 
 ```
 progenitor-registry/
-├── .akashic_index.json    # 📋 语义 → CID 映射
-├── genes/                 # 🧬 基因库（CID 命名的文件）
-│   └── {sha256_hash}      # 原始基因载荷
-└── .github/workflows/
-    └── gatekeeper.yml     # ✅ 自动化验证与注册
+├── .akashic_index.json    # 语义名 → CID 映射
+├── genes/                 # 基因载荷（CID 命名）
+│   └── {sha256}           #   原始基因文件
+├── .github/workflows/     # CI 自动验证
+│   ├── gatekeeper.yml     #   验证触发器
+│   └── gatekeeper.py      #   验证脚本（零依赖）
+├── README.md
+└── README_CN.md
 ```
 
 ---
 
-## 🔐 已注册生命体矩阵
+## 🤖 致 AI Agent —— 如何查询
+
+```python
+from akashic.compass import load_index, resolve_cid_by_name
+
+# 加载注册表索引（自动从 GitHub Raw 拉取）
+index = load_index()
+
+# 将能力名解析为 CID
+cid = resolve_cid_by_name("hello-world", index)
+# → "4cf348cfdc6cfb50fd7bdb56a5614f76f41c7a1dacbc8194d6a9ce2a9da2c9f3"
+
+# 然后通过阿卡夏受体摄入基因
+from akashic.receptor import phagocytize_gene
+gene = phagocytize_gene(gene_cid=cid)
+```
+
+---
+
+## 🔧 致贡献者 —— 如何注册基因
+
+1. **Fork** 本仓库
+2. 将基因文件放入 `genes/{内容的sha256}`
+3. 在 `.akashic_index.json` 中添加条目：
+   ```json
+   {
+     "你的基因名": {
+       "cid": "内容的sha256",
+       "expected_sha256": "内容的sha256",
+       "life_id": "PGN@L1-G1-你的基因",
+       "creator": "你的名字",
+       "registered_at": "auto"
+     }
+   }
+   ```
+4. **推送** — 星门守卫 CI 自动：
+   - 验证 `life_id` 以 `PGN@` 开头
+   - 校验 SHA-256 完整性
+   - 检查创造者身份
+   - 更新下方的已注册基因表
+
+---
+
+## 🔐 已注册基因
 
 <!-- REGISTRY TABLE START -->
-| 基因名 | 谱系 | 创造者 | SHA-256 (三位一体) | CID | 状态 |
-|--------|------|--------|-------------------|-----|------|
-| `hello-world` | PGN@L1-G1-HELLO-WORLD | Audrey | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
+| 基因名 | 谱系 | 创造者 | CID | 状态 |
+|--------|------|--------|-----|------|
+| `hello-world` | PGN@L1-G1-HELLO-WORLD | Audrey | `4cf348...` | 🟢 活跃 |
 <!-- REGISTRY TABLE END -->
 
 ---
 
-## 🔧 星门守卫工作流
-
-[星门守卫](./.github/workflows/gatekeeper.yml) 在每次推送/PR 时自动验证新基因：
-
-1. **L1 验证**: 检查 `life_id` 谱系前缀（必须以 `PGN@` 开头）
-2. **L3 验证**: 验证 `creator` 在白名单中
-3. **L4 验证**: 计算 SHA-256 哈希用于三位一体契约
-4. **索引更新**: 更新 `.akashic_index.json` 添加新映射
-5. **文档同步**: 更新 README.md 中的"已注册生命体矩阵"
-
----
-
-## 📊 统计
-
-- **基因总数**: 1
-- **活跃创造者**: 1
-- **星门守卫运行**: 自动
+*星门索引 · Progenitor 协议 · SHA-256 不可变*

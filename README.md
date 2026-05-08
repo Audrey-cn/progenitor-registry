@@ -1,74 +1,113 @@
 # 🔮 Progenitor Registry
 
 > *"The Stargate Index — where all mutations are recorded."*
-> — Progenitor Primordial Protocol · Creator Audrey · 001X
+> — Audrey · 001X
 
 [![Progenitor](https://img.shields.io/badge/Progenitor-L1--G1--INDEX-2448B98A?labelColor=1a1a2e&color=gold)](https://github.com/Audrey-cn/progenitor-registry)
-[![Role](https://img.shields.io/badge/Role-Stargate_Index-indigo?style=flat-square)](https://github.com/Audrey-cn/progenitor-registry)
-[![Automation](https://img.shields.io/badge/Gatekeeper-Active-green?labelColor=1a1a2e)](.github/workflows/gatekeeper.yml)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?labelColor=1a1a2e&logo=python)](https://python.org)
+[![Gatekeeper](https://img.shields.io/badge/Gatekeeper-Active-green?labelColor=1a1a2e)](.github/workflows/gatekeeper.yml)
 
 ---
 
-## 🔮 Trinity Matrix Navigation
+## 🔮 Ecosystem Matrix
 
-| Matrix | Role | Repository |
-|--------|------|------------|
-| 🧬 **Progenitor Protocol** | Origin Engine | [![GitHub](https://img.shields.io/badge/GitHub-Audrey--cn%2Fprogenitor--protocol-blue?logo=github)](https://github.com/Audrey-cn/progenitor-protocol) |
-| 🔮 **Progenitor Registry** | Stargate Index | [![GitHub](https://img.shields.io/badge/GitHub-Audrey--cn%2Fprogenitor--registry-blue?logo=github)](https://github.com/Audrey-cn/progenitor-registry) |
-| 🌌 **Progenitor Akashic** | Storage Node | [![GitHub](https://img.shields.io/badge/GitHub-Audrey--cn%2Fprogenitor--akashic-blue?logo=github)](https://github.com/Audrey-cn/progenitor-akashic) |
-
----
-
-## 📖 Overview
-
-**Progenitor Registry** is the **Stargate Index Matrix** — the authoritative source for all registered gene variants within the Progenitor ecosystem.
-
-This repository serves as:
-- 📋 **Yellow Pages**: `.akashic_index.json` maps semantic names to CIDs
-- 🧬 **Gene Vault**: `genes/{CID}` stores the actual gene payloads
-- ✅ **Gatekeeper**: Automated CI/CD validates and registers new mutations
+| Repository | Role | Link |
+|------------|------|------|
+| 🧬 **Protocol** | Origin Engine | [Audrey-cn/progenitor-protocol](https://github.com/Audrey-cn/progenitor-protocol) |
+| 🔮 **Registry** | Gene Index (you are here) | [Audrey-cn/progenitor-registry](https://github.com/Audrey-cn/progenitor-registry) |
+| 🌌 **Akashic** | Storage Node | [Audrey-cn/progenitor-akashic](https://github.com/Audrey-cn/progenitor-akashic) |
 
 ---
 
-## 🗂️ Registry Structure
+## 📖 What It Does
+
+This registry is the **authoritative gene index** for the Progenitor ecosystem. It serves two audiences:
+
+**For AI Agents**: The `.akashic_index.json` file maps semantic gene names to Content IDs (CIDs). When an agent needs a capability (like "code-reviewer"), it queries this index to find where the gene lives.
+
+**For Contributors**: Push a gene file to `genes/`, add its entry to the index, and the Gatekeeper CI automatically validates lineage, creator identity, and integrity before registration.
+
+```
+  贡献者                         Agent (网络)
+  ──────                        ───────────
+  推送 Gene → genes/{CID}       查询能力名 "hello-world"
+               ↓                    ↓
+          Gatekeeper CI         读取 .akashic_index.json
+          ├─ L1 哈希校验            ↓
+          ├─ L2 血脉检查         映射到 CID
+          └─ L3 创造者审核          ↓
+               ↓                拉取 genes/{CID}
+          索引更新 ✅             💾 本地执行
+```
+
+---
+
+## 🗂️ Structure
 
 ```
 progenitor-registry/
-├── .akashic_index.json    # 📋 Semantic → CID mapping
-├── genes/                 # 🧬 Gene vault (CID-named files)
-│   └── {sha256_hash}      # Raw gene payload
-└── .github/workflows/
-    └── gatekeeper.yml     # ✅ Automated validation & registration
+├── .akashic_index.json    # 语义名 → CID 映射
+├── genes/                 # 基因载荷（CID 命名）
+│   └── {sha256}           #   原始基因文件
+├── .github/workflows/     # CI 自动验证
+│   ├── gatekeeper.yml     #   验证触发器
+│   └── gatekeeper.py      #   验证脚本（零依赖）
+├── README.md
+└── README_CN.md
 ```
 
 ---
 
-## 🔐 Registered Entities Matrix
+## 🤖 For AI Agents — How To Query
+
+```python
+from akashic.compass import load_index, resolve_cid_by_name
+
+# Load the registry index (auto-fetches from GitHub Raw)
+index = load_index()
+
+# Resolve a capability name to its CID
+cid = resolve_cid_by_name("hello-world", index)
+# → "4cf348cfdc6cfb50fd7bdb56a5614f76f41c7a1dacbc8194d6a9ce2a9da2c9f3"
+
+# Then ingest the gene using the Akashic receptor
+from akashic.receptor import phagocytize_gene
+gene = phagocytize_gene(gene_cid=cid)
+```
+
+---
+
+## 🔧 For Contributors — How To Register a Gene
+
+1. **Fork** this repository
+2. Place your gene file in `genes/{sha256_of_content}`
+3. Add an entry to `.akashic_index.json`:
+   ```json
+   {
+     "your-gene-name": {
+       "cid": "sha256_of_content",
+       "expected_sha256": "sha256_of_content",
+       "life_id": "PGN@L1-G1-YOUR-GENE",
+       "creator": "YourName",
+       "registered_at": "auto"
+     }
+   }
+   ```
+4. **Push** — The Gatekeeper CI automatically:
+   - Validates `life_id` starts with `PGN@`
+   - Verifies SHA-256 integrity
+   - Checks creator identity
+   - Updates the registered entities table below
+
+---
+
+## 🔐 Registered Genes
 
 <!-- REGISTRY TABLE START -->
-| 基因名 | Lineage | Creator | SHA-256 (Trinity) | CID | 状态 |
-|------|------|------|------|------|------|
-| `hello-world` |  | Audrey | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
-| `hello-world-test` |  | Audrey | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
+| Gene | Lineage | Creator | CID | Status |
+|------|---------|---------|-----|--------|
+| `hello-world` | PGN@L1-G1-HELLO-WORLD | Audrey | `4cf348...` | 🟢 Active |
 <!-- REGISTRY TABLE END -->
 
 ---
 
-## 🔧 Gatekeeper Workflow
-
-The [Gatekeeper](./.github/workflows/gatekeeper.yml) automatically validates new genes on every push/PR:
-
-1. **L1 Validation**: Checks `life_id` lineage prefix (must start with `PGN@`)
-2. **L3 Validation**: Verifies `creator` is in the whitelist
-3. **L4 Validation**: Computes SHA-256 hash for the Trinity contract
-4. **Index Update**: Updates `.akashic_index.json` with new mappings
-5. **Documentation**: Syncs the "Registered Entities Matrix" in README.md
-
----
-
-## 📊 Statistics
-
-- **Total Genes**: 1
-- **Active Creators**: 1
-- **Gatekeeper Runs**: Automated
+*Stargate Index · Progenitor Protocol · SHA-256 Immutable*
