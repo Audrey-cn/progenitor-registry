@@ -16,7 +16,6 @@
 |------|------|------|
 | 🧬 **Protocol** | 始源引擎 | [Audrey-cn/progenitor-protocol](https://github.com/Audrey-cn/progenitor-protocol) |
 | 🔮 **Registry** | 基因索引（当前页面） | [Audrey-cn/progenitor-registry](https://github.com/Audrey-cn/progenitor-registry) |
-| 🌌 **Akashic** | 存储节点 | [Audrey-cn/progenitor-akashic](https://github.com/Audrey-cn/progenitor-akashic) |
 
 ---
 

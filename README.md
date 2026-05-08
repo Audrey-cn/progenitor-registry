@@ -16,7 +16,6 @@
 |------------|------|------|
 | 🧬 **Protocol** | Origin Engine | [Audrey-cn/progenitor-protocol](https://github.com/Audrey-cn/progenitor-protocol) |
 | 🔮 **Registry** | Gene Index (you are here) | [Audrey-cn/progenitor-registry](https://github.com/Audrey-cn/progenitor-registry) |
-| 🌌 **Akashic** | Storage Node | [Audrey-cn/progenitor-akashic](https://github.com/Audrey-cn/progenitor-akashic) |
 
 ---
 
