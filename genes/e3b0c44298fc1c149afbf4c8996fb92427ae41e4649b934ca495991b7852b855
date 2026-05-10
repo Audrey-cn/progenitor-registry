@@ -1,0 +1,5 @@
+# life_id: PGN@L1-G2-TEST-GENE
+# creator: Audrey
+# description: 测试基因用于验证 Gatekeeper v2.0 开放注册功能
+def main():
+    return {"status": "success", "message": "测试基因验证成功"}
