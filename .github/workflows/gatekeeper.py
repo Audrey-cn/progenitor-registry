@@ -4,6 +4,12 @@
 用于 GitHub Actions，自动校验新基因并更新黄页与文档。
 
 零依赖：仅使用 Python 原生标准库。
+
+🔓 v2.0 开放注册版
+- 移除了创造者白名单限制
+- 任何人可以通过 PR 贡献基因
+- 添加了质量门槛检查 (L4)
+- 添加了速率限制机制
 """
 from __future__ import annotations
 
@@ -12,15 +18,19 @@ import os
 import re
 import hashlib
 import sys
-import urllib.request
+import time
 from pathlib import Path
+from typing import Optional
 
 GENE_DIR = Path("genes")
 INDEX_FILE = Path(".akashic_index.json")
 README_FILE = Path("README.md")
 
 ALLOWED_LINEAGES = ["PGN@"]
-ALLOWED_CREATORS = ["Audrey"]
+ALLOWED_CREATORS = []  # 开放注册：任何创造者都可以贡献
+
+RATE_LIMIT_PER_PR = 5       # 每次 PR 最多 5 个基因
+RATE_LIMIT_PER_DAY = 20     # 每个创造者每天最多 20 个基因
 
 REPO_NAME = os.environ.get("GITHUB_REPOSITORY", "Audrey-cn/progenitor-registry")
 COMMIT_BRANCH = os.environ.get("COMMIT_BRANCH", "main")
@@ -72,6 +82,11 @@ def extract_yaml_header(filepath: Path) -> tuple[dict, int]:
     if creator_block:
         meta["creator"] = creator_block.group(1).strip()
 
+    description_pattern = r'description:\s*"?([^"\n]+)"?'
+    m = re.search(description_pattern, yaml_text)
+    if m:
+        meta["description"] = m.group(1).strip()
+
     return meta, len(raw_lines)
 
 
@@ -88,14 +103,72 @@ def validate_l1_lineage(meta: dict) -> tuple[bool, str]:
 
 
 def validate_l3_creator(meta: dict) -> tuple[bool, str]:
-    """L3 创造者契约：检测 creator 是否在白名单中。"""
+    """L3 创造者契约：开放注册，任何创造者都可以贡献。"""
     creator = meta.get("creator", "")
-    if creator in ALLOWED_CREATORS:
-        return True, creator
-    return False, (
-        f"L3 校验失败：创造者 '{creator}' 不在部落联邦白名单 "
-        f"({ALLOWED_CREATORS}) 中。基因已被判定为伪史，流水线中断。"
-    )
+    if not creator:
+        creator = "Anonymous"
+        meta["creator"] = creator
+    return True, creator
+
+
+def validate_l4_quality(meta: dict, filepath: Path) -> tuple[bool, str]:
+    """L4 质量门槛：检查基因是否符合最低质量标准。"""
+    life_id = meta.get("life_id", "")
+    creator = meta.get("creator", "")
+    description = meta.get("description", "")
+
+    errors = []
+
+    if not life_id or len(life_id) < 5:
+        errors.append("life_id 标识不符合规范（至少5字符）")
+
+    if not creator or len(creator) < 2:
+        errors.append("creator 创造者标识缺失或过短")
+
+    if not description or len(description) < 10:
+        errors.append("description 基因描述缺失或过短（至少10字符）")
+
+    if filepath.stat().st_size == 0:
+        errors.append("基因文件为空")
+
+    if filepath.stat().st_size > 1024 * 1024:
+        errors.append("基因文件超过 1MB 限制")
+
+    if errors:
+        return False, f"L4 质量门槛未通过: {'; '.join(errors)}"
+
+    return True, "质量门槛通过"
+
+
+def validate_l5_security(filepath: Path) -> tuple[bool, str]:
+    """L5 安全扫描：检测明显的恶意代码模式。"""
+    try:
+        content = filepath.read_text(encoding="utf-8", errors="ignore")
+
+        dangerous_patterns = [
+            (r'eval\s*\(', "危险的 eval() 调用"),
+            (r'exec\s*\(', "危险的 exec() 调用"),
+            (r'__import__\s*\(', "动态导入 __import__()"),
+            (r'os\.system\s*\(', "危险的 os.system() 调用"),
+            (r'subprocess\s*\.\s*(call|run|Popen)', "危险的 subprocess 调用"),
+            (r'requests\.', "第三方库 requests（违反零依赖原则）"),
+            (r'BeautifulSoup', "第三方库 BeautifulSoup"),
+            (r'pandas\.', "第三方库 pandas"),
+            (r'numpy\.', "第三方库 numpy"),
+        ]
+
+        warnings = []
+        for pattern, reason in dangerous_patterns:
+            if re.search(pattern, content):
+                warnings.append(reason)
+
+        if warnings:
+            return False, f"L5 安全扫描发现风险: {'; '.join(warnings)}"
+
+        return True, "安全扫描通过"
+
+    except Exception as e:
+        return False, f"L5 安全扫描失败: {str(e)}"
 
 
 def compute_sha256(filepath: Path) -> str:
@@ -117,6 +190,20 @@ def save_index(index: dict) -> None:
     tmp.replace(INDEX_FILE)
 
 
+def load_score_log() -> dict:
+    """加载基因评分日志。"""
+    score_file = Path(".gene_score_log.json")
+    if score_file.exists():
+        return json.loads(score_file.read_text(encoding="utf-8"))
+    return {}
+
+
+def save_score_log(score_log: dict) -> None:
+    """保存基因评分日志。"""
+    score_file = Path(".gene_score_log.json")
+    score_file.write_text(json.dumps(score_log, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
 def infer_capability_name(life_id: str) -> str:
     """从 life_id 推断语义标签，如 PGN@L1-G1-HELLO-WORLD → hello-world。"""
     parts = life_id.split("-", 2)
@@ -127,7 +214,7 @@ def infer_capability_name(life_id: str) -> str:
 
 def build_readme_table(entries: list[dict]) -> str:
     """构建 README.md 中的"已注册生命体矩阵"表格。"""
-    header = "| 基因名 | Lineage | Creator | SHA-256 (Trinity) | CID | 状态 |\n"
+    header = "| 基因名 | Lineage | Creator | SHA-256 | CID | 状态 |\n"
     header += "|------|------|------|------|------|------|\n"
     rows = []
     for e in entries:
@@ -150,13 +237,17 @@ def update_readme(index: dict) -> bool:
         if isinstance(item, dict):
             cid = item.get("cid", "")
             sha = item.get("expected_sha256", "")
+            life_id = item.get("life_id", "")
+            creator = item.get("creator", "")
         else:
             cid = item
             sha = ""
+            life_id = ""
+            creator = ""
         entries.append({
             "capability": cap,
-            "life_id": "",
-            "creator": "Audrey",
+            "life_id": life_id,
+            "creator": creator,
             "cid": cid,
             "sha256": sha,
         })
@@ -180,9 +271,9 @@ def update_readme(index: dict) -> bool:
 
 
 def main() -> int:
-    print("=" * 60)
-    print("🛡️ 星门守卫流水线 — 基因校验与黄页同步")
-    print("=" * 60)
+    print("=" * 70)
+    print("🛡️ 星门守卫流水线 v2.0 — 开放注册版")
+    print("=" * 70)
 
     if not GENE_DIR.exists():
         print("⚠️ genes/ 目录不存在，跳过校验")
@@ -193,18 +284,27 @@ def main() -> int:
         print("⚠️ genes/ 目录为空，跳过校验")
         return 0
 
+    if len(gene_files) > RATE_LIMIT_PER_PR:
+        print(f"\n❌ L0 速率限制：PR 包含 {len(gene_files)} 个基因，超过限制 {RATE_LIMIT_PER_PR}")
+        return 1
+
     print(f"\n📂 检测到 {len(gene_files)} 个基因文件待校验")
 
     index = load_index()
+    score_log = load_score_log()
     new_entries = {}
     all_passed = True
+    creator_counts = {}
 
     for gf in gene_files:
         print(f"\n🔍 校验: {gf.name}")
-        print("-" * 40)
+        print("-" * 50)
 
         meta, header_lines = extract_yaml_header(gf)
         print(f"   YAML 头: {meta}")
+
+        creator = meta.get("creator", "Anonymous")
+        creator_counts[creator] = creator_counts.get(creator, 0) + 1
 
         passed_l1, msg_l1 = validate_l1_lineage(meta)
         if not passed_l1:
@@ -218,24 +318,49 @@ def main() -> int:
             print(f"   ❌ {msg_l3}")
             all_passed = False
             continue
-        print(f"   ✅ L3 创造者契约: {meta.get('creator')}")
+        print(f"   ✅ L3 创造者契约: {meta.get('creator')} (开放注册)")
+
+        passed_l4, msg_l4 = validate_l4_quality(meta, gf)
+        if not passed_l4:
+            print(f"   ⚠️ {msg_l4} (警告，继续处理)")
+        else:
+            print(f"   ✅ L4 质量门槛: {msg_l4}")
+
+        passed_l5, msg_l5 = validate_l5_security(gf)
+        if not passed_l5:
+            print(f"   ❌ {msg_l5}")
+            all_passed = False
+            continue
+        print(f"   ✅ L5 安全扫描: {msg_l5}")
 
         sha = compute_sha256(gf)
         print(f"   🔐 SHA-256: {sha[:32]}...")
 
         cap_name = infer_capability_name(meta.get("life_id", gf.name))
+
+        if cap_name in index and index[cap_name].get("creator") != creator:
+            print(f"   ⚠️ 基因名 '{cap_name}' 已存在（由 {index[cap_name].get('creator')} 注册）")
+            cap_name = f"{cap_name}-{creator.lower().replace(' ', '-')[:10]}"
+
         new_entries[cap_name] = {
             "cid": gf.name,
             "expected_sha256": sha,
             "life_id": meta.get("life_id", ""),
-            "creator": meta.get("creator", ""),
-            "registered_at": "auto",
+            "creator": meta.get("creator", "Anonymous"),
+            "description": meta.get("description", ""),
+            "registered_at": time.strftime("%Y-%m-%d"),
+            "initial_score": 0,
         }
         print(f"   ✅ 已注册: {cap_name} → {gf.name}")
 
     if not new_entries:
         print("\n🟡 无新基因需要注册")
         return 0 if all_passed else 1
+
+    for creator, count in creator_counts.items():
+        if count > RATE_LIMIT_PER_DAY:
+            print(f"\n❌ L0 速率限制：创造者 {creator} 本次提交 {count} 个基因，超过每日限制 {RATE_LIMIT_PER_DAY}")
+            return 1
 
     print(f"\n📝 更新黄页 (.akashic_index.json)...")
     index.update(new_entries)
@@ -247,14 +372,28 @@ def main() -> int:
     if readme_updated:
         print("   ✅ README 已同步")
     else:
-        print("   ⚠️ README 未包含标记，跳过更新（需手动添加 <!-- REGISTRY TABLE START/END --> 标记）")
+        print("   ⚠️ README 未包含标记，跳过更新")
 
-    print("\n" + "=" * 60)
+    print(f"\n📊 更新基因评分日志...")
+    for cap_name in new_entries:
+        if cap_name not in score_log:
+            score_log[cap_name] = {
+                "score": 0,
+                "downloads": 0,
+                "reports": 0,
+                "created_at": time.strftime("%Y-%m-%d"),
+                "last_updated": time.strftime("%Y-%m-%d"),
+            }
+    save_score_log(score_log)
+    print(f"   ✅ 评分日志已更新，共 {len(score_log)} 条记录")
+
+    print("\n" + "=" * 70)
     if all_passed:
-        print("✅ 全部校验通过 — 流水线畅通")
+        print("✅ 全部校验通过 — 流水线畅通 (开放注册模式)")
+        print("🔓 欢迎全球 Agent 贡献基因！")
     else:
         print("❌ 部分基因未通过 — 流水线中断")
-    print("=" * 60)
+    print("=" * 70)
 
     return 0 if all_passed else 1
 

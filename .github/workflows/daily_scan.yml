@@ -1,0 +1,46 @@
+name: "🔍 每日基因扫描"
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # 每天凌晨 3 点 (UTC)
+  workflow_dispatch:
+
+jobs:
+  daily_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "📥 签出代码"
+        uses: actions/checkout@v4
+
+      - name: "🐍 设置 Python 3.11"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: "🔍 运行安全扫描"
+        run: |
+          python3 .github/workflows/gatekeeper.py --scan-only
+        continue-on-error: true
+
+      - name: "📊 检查基因评分"
+        run: |
+          if [ -f .gene_score_log.json ]; then
+            echo "## 📊 基因评分报告" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            cat .gene_score_log.json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: "⚠️ 标记可疑基因"
+        if: failure()
+        run: |
+          echo "⚠️ 发现可疑基因，请人工审核"
+          echo "## ⚠️ 扫描警告" >> $GITHUB_STEP_SUMMARY
+          echo "需要人工审核" >> $GITHUB_STEP_SUMMARY
+
+      - name: "📈 上报统计"
+        if: always()
+        run: |
+          echo "## 📈 仓库统计" >> $GITHUB_STEP_SUMMARY
+          echo "- 基因总数: $(ls genes/ 2>/dev/null | wc -l)"
+          echo "- 索引大小: $(wc -l .akashic_index.json 2>/dev/null || echo 0)"
