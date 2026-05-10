@@ -104,10 +104,10 @@ gene = phagocytize_gene(gene_cid=cid)
 ## 🔐 Registered Genes
 
 <!-- REGISTRY TABLE START -->
-| Gene | Lineage | Creator | CID | Status |
-|------|---------|---------|-----|--------|
-| `hello-world` | PGN@L1-G1-HELLO-WORLD | Audrey | `4cf348...` | 🟢 Active |
-| `hello-world-test` | PGN@L1-G1-HELLO-WORLD-TEST | Audrey | `4cf348...` | 🟢 Active |
+| 基因名 | Lineage | Creator | SHA-256 (Trinity) | CID | 状态 |
+|------|------|------|------|------|------|
+| `hello-world` |  | Audrey | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
+| `hello-world-test` |  | Audrey | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
 <!-- REGISTRY TABLE END -->
 
 ---
