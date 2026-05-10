@@ -2,11 +2,28 @@
 
 [中文](README_CN.md) | English
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Active-blue?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Gatekeeper-Auto_Validate-purple?style=for-the-badge" />
+</p>
+
+---
+
 > *"The Stargate Index — where all mutations are recorded."*
 > — Audrey · 001X
 
-[![Progenitor](https://img.shields.io/badge/Progenitor-L1--G1--INDEX-2448B98A?labelColor=1a1a2e&color=gold)](https://github.com/Audrey-cn/progenitor-registry)
-[![Gatekeeper](https://img.shields.io/badge/Gatekeeper-Active-green?labelColor=1a1a2e)](.github/workflows/gatekeeper.yml)
+---
+
+## 📑 Table of Contents
+
+- [🔮 Ecosystem Matrix](#-ecosystem-matrix)
+- [📖 What It Does](#-what-it-does)
+- [🚀 Quick Start](#-quick-start)
+- [🗂️ Project Structure](#️-project-structure)
+- [🔐 Registered Genes](#-registered-genes)
+- [🤝 Contributing](#-contributing)
+- [📜 License](#-license)
 
 ---
 
@@ -23,42 +40,28 @@
 
 This registry is the **authoritative gene index** for the Progenitor v2.18 ecosystem. It serves two audiences:
 
-**For AI Agents**: The `.akashic_index.json` file maps semantic gene names (like "code-reviewer") to Content IDs (CIDs). When an agent needs a capability, it queries this index to find the gene. Works with the Progenitor Protocol's dual-index resolution (legacy semantic names + IPFS CIDs).
+**For AI Agents**: The `.akashic_index.json` file maps semantic gene names (like "code-reviewer") to Content IDs (CIDs). When an agent needs a capability, it queries this index to find the gene.
 
-**For Contributors**: Push a gene file to `genes/`, add its entry to the index, and the Gatekeeper CI automatically validates lineage (`PGN@` prefix), creator identity (`ALLOWED_CREATORS`), and SHA-256 integrity — mirroring the L1–L3 layers of the Progenitor Crucible audit.
-
-```
-  贡献者                         Agent (网络)
-  ──────                        ───────────
-  推送 Gene → genes/{CID}       查询能力名 "hello-world"
-               ↓                    ↓
-          Gatekeeper CI         读取 .akashic_index.json
-          ├─ L1 哈希校验            ↓
-          ├─ L2 血脉检查         映射到 CID
-          └─ L3 创造者审核          ↓
-               ↓                拉取 genes/{CID}
-          索引更新 ✅             💾 本地执行
-```
-
----
-
-## 🗂️ Structure
+**For Contributors**: Push a gene file to `genes/`, add its entry to the index, and the Gatekeeper CI automatically validates lineage, creator identity, and SHA-256 integrity.
 
 ```
-progenitor-registry/
-├── .akashic_index.json    # 语义名 → CID 映射
-├── genes/                 # 基因载荷（CID 命名）
-│   └── {sha256}           #   原始基因文件
-├── .github/workflows/     # CI 自动验证
-│   ├── gatekeeper.yml     #   验证触发器
-│   └── gatekeeper.py      #   验证脚本（零依赖）
-├── README.md
-└── README_CN.md
+  Contributor                    Agent (network)
+  ────────                       ──────────────
+  Push Gene → genes/{CID}         Query "hello-world"
+               ↓                      ↓
+          Gatekeeper CI           Read .akashic_index.json
+          ├─ L1 Hash Check            ↓
+          ├─ L2 Lineage Verify     Map to CID
+          └─ L3 Creator Check         ↓
+               ↓                   Pull genes/{CID}
+          Index Updated ✅         💾 Execute Locally
 ```
 
 ---
 
-## 🤖 For AI Agents — How To Query
+## 🚀 Quick Start
+
+### For AI Agents — Query a Gene
 
 ```python
 from akashic.compass import load_index, resolve_cid_by_name
@@ -75,13 +78,11 @@ from akashic.receptor import phagocytize_gene
 gene = phagocytize_gene(gene_cid=cid)
 ```
 
----
-
-## 🔧 For Contributors — How To Register a Gene
+### For Contributors — Register a Gene
 
 1. **Fork** this repository
-2. Place your gene file in `genes/{sha256_of_content}`
-3. Add an entry to `.akashic_index.json`:
+2. **Place** your gene file in `genes/{sha256_of_content}`
+3. **Add** an entry to `.akashic_index.json`:
    ```json
    {
      "your-gene-name": {
@@ -93,11 +94,23 @@ gene = phagocytize_gene(gene_cid=cid)
      }
    }
    ```
-4. **Push** — The Gatekeeper CI automatically:
-   - Validates `life_id` starts with `PGN@`
-   - Verifies SHA-256 integrity
-   - Checks creator identity
-   - Updates the registered entities table below
+4. **Push** — The Gatekeeper CI automatically validates your gene
+
+---
+
+## 🗂️ Project Structure
+
+```
+progenitor-registry/
+├── .akashic_index.json    # Semantic name → CID mapping
+├── genes/                 # Gene payloads (CID-named)
+│   └── {sha256}           #   Raw gene files
+├── .github/workflows/      # CI auto-validation
+│   ├── gatekeeper.yml     #   Validation trigger
+│   └── gatekeeper.py      #   Validation script (zero-dependency)
+├── README.md
+└── README_CN.md
+```
 
 ---
 
@@ -109,6 +122,33 @@ gene = phagocytize_gene(gene_cid=cid)
 | `hello-world` |  | Audrey | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
 | `hello-world-test` |  | Audrey | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
 <!-- REGISTRY TABLE END -->
+
+---
+
+## 🤝 Contributing
+
+### Gatekeeper CI Validation
+
+When you submit a gene, the Gatekeeper CI automatically checks:
+
+1. **L1 Hash Check** — SHA-256 integrity verification
+2. **L2 Lineage Verify** — `life_id` must start with `PGN@`
+3. **L3 Creator Check** — Creator must be in `ALLOWED_CREATORS`
+
+### Gene Registration Requirements
+
+| Field | Requirement |
+|-------|-------------|
+| `cid` | Must match `expected_sha256` |
+| `life_id` | Must start with `PGN@` |
+| `creator` | Must be in registry's allowlist |
+| File location | `genes/{sha256}` |
+
+---
+
+## 📜 License
+
+This project is released under the **MIT License**.
 
 ---
 
