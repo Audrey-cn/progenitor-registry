@@ -122,8 +122,11 @@ progenitor-registry/
 <!-- REGISTRY TABLE START -->
 | 基因名 | Lineage | Creator | SHA-256 | CID | 状态 |
 |------|------|------|------|------|------|
+| `code-reviewer` | PGN@L1-G3-CODE-REVIEWER | Audrey | `e80ca2bcbc4475e1...` | `e80ca2bcbc4475e1...` | 🟢 已注册 |
 | `hello-world` |  |  | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
 | `hello-world-test` | PGN@L1-G1-HELLO-WORLD-TEST | Audrey | `4cf348cfdc6cfb50...` | `4cf348cfdc6cfb50...` | 🟢 已注册 |
+| `json-toolkit` | PGN@L1-G5-JSON-TOOLKIT | Audrey | `917b7b8fdd77e19d...` | `4a5b6c7d8e9f0a1b...` | 🟢 已注册 |
+| `log-parser` | PGN@L1-G4-LOG-PARSER | Audrey | `92337b0606cbaa80...` | `3f2a8c6d9e1b4578...` | 🟢 已注册 |
 | `test-gene` | PGN@L1-G2-TEST-GENE | Audrey | `12bdc659727eb8f9...` | `e3b0c44298fc1c14...` | 🟢 已注册 |
 <!-- REGISTRY TABLE END -->
 

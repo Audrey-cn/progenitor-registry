@@ -1,0 +1,72 @@
+# life_id: PGN@L1-G3-CODE-REVIEWER
+# creator: Audrey
+# description: 代码审查基因 - 检测代码质量问题并提供改进建议
+import ast
+import re
+
+def analyze_code_quality(code):
+    """分析代码质量，返回问题列表和建议"""
+    issues = []
+    lines = code.split('\n')
+    
+    for i, line in enumerate(lines, 1):
+        if len(line) > 120:
+            issues.append({
+                'line': i,
+                'severity': 'warning',
+                'type': 'line_too_long',
+                'message': f'行长度 {len(line)} 超过 120 字符限制'
+            })
+        
+        if line.strip().startswith('#') and len(line.strip()) > 3:
+            if not line.strip().startswith('# '):
+                issues.append({
+                    'line': i,
+                    'severity': 'info',
+                    'type': 'comment_format',
+                    'message': '注释建议使用 # 后跟空格'
+                })
+        
+        if re.search(r'\bprint\s*\(', line):
+            issues.append({
+                'line': i,
+                'severity': 'info',
+                'type': 'debug_code',
+                'message': '检测到调试代码 print()，建议移除或使用日志'
+            })
+    
+    try:
+        tree = ast.parse(code)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef):
+                if len(ast.get_docstring(node) or '') < 10 and node.name != 'main':
+                    issues.append({
+                        'line': node.lineno,
+                        'severity': 'info',
+                        'type': 'missing_docstring',
+                        'message': f'函数 {node.name} 缺少文档字符串'
+                    })
+    except SyntaxError:
+        issues.append({
+            'line': 1,
+            'severity': 'error',
+            'type': 'syntax_error',
+            'message': '代码存在语法错误'
+        })
+    
+    return {
+        'status': 'success',
+        'total_lines': len(lines),
+        'issues_count': len(issues),
+        'issues': issues,
+        'quality_score': max(0, 100 - len(issues) * 10)
+    }
+
+def main():
+    sample_code = '''def hello():
+    print("Hello World")
+    x=1+2
+    return x'''
+    result = analyze_code_quality(sample_code)
+    print(f"代码审查结果: {result}")
+    return result

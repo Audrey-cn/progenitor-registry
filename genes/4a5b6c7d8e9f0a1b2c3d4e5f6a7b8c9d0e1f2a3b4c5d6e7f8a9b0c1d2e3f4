@@ -1,0 +1,76 @@
+# life_id: PGN@L1-G5-JSON-TOOLKIT
+# creator: Audrey
+# description: JSON 工具包基因 - 提供 JSON 解析、验证、格式化功能
+import json
+import base64
+
+def validate_json(data_str):
+    """验证 JSON 字符串是否合法"""
+    try:
+        parsed = json.loads(data_str)
+        return {
+            'valid': True,
+            'type': type(parsed).__name__,
+            'keys': list(parsed.keys()) if isinstance(parsed, dict) else None,
+            'length': len(parsed) if isinstance(parsed, (list, dict)) else None
+        }
+    except json.JSONDecodeError as e:
+        return {
+            'valid': False,
+            'error': str(e),
+            'position': e.pos,
+            'line': e.lineno,
+            'column': e.colno
+        }
+
+def format_json(data, indent=2):
+    """格式化 JSON 数据"""
+    try:
+        if isinstance(data, str):
+            data = json.loads(data)
+        return json.dumps(data, indent=indent, ensure_ascii=False)
+    except Exception as e:
+        return {'error': str(e)}
+
+def minify_json(data):
+    """压缩 JSON 数据"""
+    try:
+        if isinstance(data, str):
+            data = json.loads(data)
+        return json.dumps(data, separators=(',', ':'))
+    except Exception as e:
+        return {'error': str(e)}
+
+def extract_json_paths(data, prefix=''):
+    """提取 JSON 所有路径"""
+    if isinstance(data, dict):
+        paths = []
+        for key, value in data.items():
+            current_path = f"{prefix}.{key}" if prefix else key
+            paths.append(current_path)
+            if isinstance(value, (dict, list)):
+                paths.extend(extract_json_paths(value, current_path))
+        return paths
+    elif isinstance(data, list):
+        paths = []
+        for i, item in enumerate(data):
+            current_path = f"{prefix}[{i}]"
+            paths.append(current_path)
+            if isinstance(item, (dict, list)):
+                paths.extend(extract_json_paths(item, current_path))
+        return paths
+    else:
+        return [f"{prefix} = {type(data).__name__}"]
+
+def main():
+    test_data = '{"name": "test", "value": 123, "items": [1, 2, 3]}'
+    
+    result = {
+        'validation': validate_json(test_data),
+        'formatted': format_json(test_data),
+        'minified': minify_json(test_data),
+        'paths': extract_json_paths(json.loads(test_data))
+    }
+    
+    print(f"JSON 工具包测试结果: {result}")
+    return result

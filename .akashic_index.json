@@ -20,5 +20,32 @@
     "description": "测试基因用于验证 Gatekeeper v2.0 开放注册功能",
     "registered_at": "2026-05-10",
     "initial_score": 0
+  },
+  "json-toolkit": {
+    "cid": "4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4",
+    "expected_sha256": "917b7b8fdd77e19d2ff433cd3f50035648ed86aa2c929622b5cbfafc05130388",
+    "life_id": "PGN@L1-G5-JSON-TOOLKIT",
+    "creator": "Audrey",
+    "description": "JSON 工具包基因 - 提供 JSON 解析、验证、格式化功能",
+    "registered_at": "2026-05-10",
+    "initial_score": 0
+  },
+  "log-parser": {
+    "cid": "3f2a8c6d9e1b4578901234567890abcdef1234567890abcdef1234567890abcdef",
+    "expected_sha256": "92337b0606cbaa808617cf9ab848cb80caa7c719eb5e5428931d30aa58b88249",
+    "life_id": "PGN@L1-G4-LOG-PARSER",
+    "creator": "Audrey",
+    "description": "日志解析基因 - 解析和分析日志文件，提取关键信息",
+    "registered_at": "2026-05-10",
+    "initial_score": 0
+  },
+  "code-reviewer": {
+    "cid": "e80ca2bcbc4475e1b67439739a030634267fddc3b68a4c5ef6597d10c92981c4",
+    "expected_sha256": "e80ca2bcbc4475e1b67439739a030634267fddc3b68a4c5ef6597d10c92981c4",
+    "life_id": "PGN@L1-G3-CODE-REVIEWER",
+    "creator": "Audrey",
+    "description": "代码审查基因 - 检测代码质量问题并提供改进建议",
+    "registered_at": "2026-05-10",
+    "initial_score": 0
   }
 }
