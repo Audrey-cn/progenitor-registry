@@ -1,0 +1,22 @@
+﻿{
+  "dangerous_patterns": [
+    {"pattern": "eval(", "reason": "eval() call", "regex": false},
+    {"pattern": "exec(", "reason": "exec() call", "regex": false},
+    {"pattern": "__import__(", "reason": "dynamic __import__()", "regex": false},
+    {"pattern": "os.system(", "reason": "os.system() call", "regex": false},
+    {"pattern": "subprocess.call", "reason": "subprocess.call() call", "regex": false},
+    {"pattern": "subprocess.run", "reason": "subprocess.run() call", "regex": false},
+    {"pattern": "subprocess.Popen", "reason": "subprocess.Popen() call", "regex": false},
+    {"pattern": "subprocess\\s*\\.\\s*(call|run|Popen)", "reason": "subprocess execution call", "regex": true},
+    {"pattern": "requests.", "reason": "third-party requests usage", "regex": false},
+    {"pattern": "BeautifulSoup", "reason": "third-party BeautifulSoup usage", "regex": false},
+    {"pattern": "pandas.", "reason": "third-party pandas usage", "regex": false},
+    {"pattern": "numpy.", "reason": "third-party numpy usage", "regex": false},
+    {"pattern": "import requests", "reason": "third-party requests import", "regex": false},
+    {"pattern": "from requests", "reason": "third-party requests import", "regex": false},
+    {"pattern": "import pandas", "reason": "third-party pandas import", "regex": false},
+    {"pattern": "from pandas", "reason": "third-party pandas import", "regex": false},
+    {"pattern": "import numpy", "reason": "third-party numpy import", "regex": false},
+    {"pattern": "from numpy", "reason": "third-party numpy import", "regex": false}
+  ]
+}

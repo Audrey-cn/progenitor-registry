@@ -1,51 +1,153 @@
 {
-  "hello-world": {
-    "cid": "4cf348cfdc6cfb50fd7bdb56a5614f76f41c7a1dacbc8194d6a9ce2a9da2c9f3",
-    "expected_sha256": "4cf348cfdc6cfb50fd7bdb56a5614f76f41c7a1dacbc8194d6a9ce2a9da2c9f3"
-  },
-  "hello-world-test": {
-    "cid": "4cf348cfdc6cfb50fd7bdb56a5614f76f41c7a1dacbc8194d6a9ce2a9da2c9f3",
-    "expected_sha256": "4cf348cfdc6cfb50fd7bdb56a5614f76f41c7a1dacbc8194d6a9ce2a9da2c9f3",
-    "life_id": "PGN@L1-G1-HELLO-WORLD-TEST",
-    "creator": "Audrey",
-    "description": "",
-    "registered_at": "2026-05-10",
-    "initial_score": 0
-  },
-  "test-gene": {
-    "cid": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "expected_sha256": "12bdc659727eb8f952771df75655e803a482716c493205873f4373bff61e247f",
-    "life_id": "PGN@L1-G2-TEST-GENE",
-    "creator": "Audrey",
-    "description": "测试基因用于验证 Gatekeeper v2.0 开放注册功能",
-    "registered_at": "2026-05-10",
-    "initial_score": 0
-  },
-  "json-toolkit": {
-    "cid": "4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4",
-    "expected_sha256": "917b7b8fdd77e19d2ff433cd3f50035648ed86aa2c929622b5cbfafc05130388",
-    "life_id": "PGN@L1-G5-JSON-TOOLKIT",
-    "creator": "Audrey",
-    "description": "JSON 工具包基因 - 提供 JSON 解析、验证、格式化功能",
-    "registered_at": "2026-05-10",
-    "initial_score": 0
-  },
-  "log-parser": {
-    "cid": "3f2a8c6d9e1b4578901234567890abcdef1234567890abcdef1234567890abcdef",
-    "expected_sha256": "92337b0606cbaa808617cf9ab848cb80caa7c719eb5e5428931d30aa58b88249",
-    "life_id": "PGN@L1-G4-LOG-PARSER",
-    "creator": "Audrey",
-    "description": "日志解析基因 - 解析和分析日志文件，提取关键信息",
-    "registered_at": "2026-05-10",
-    "initial_score": 0
-  },
   "code-reviewer": {
-    "cid": "e80ca2bcbc4475e1b67439739a030634267fddc3b68a4c5ef6597d10c92981c4",
-    "expected_sha256": "e80ca2bcbc4475e1b67439739a030634267fddc3b68a4c5ef6597d10c92981c4",
+    "cid": "3a1bd515d22c38edd14621d246ebdb9d20f54fbc5f3b62310782c3d3422b33a9",
+    "expected_sha256": "3a1bd515d22c38edd14621d246ebdb9d20f54fbc5f3b62310782c3d3422b33a9",
     "life_id": "PGN@L1-G3-CODE-REVIEWER",
     "creator": "Audrey",
     "description": "代码审查基因 - 检测代码质量问题并提供改进建议",
-    "registered_at": "2026-05-10",
-    "initial_score": 0
+    "registered_at": "2026-05-11",
+    "initial_score": 0,
+    "schema_version": "akashic.index/v2",
+    "capability": "code-reviewer",
+    "content_sha256": "3a1bd515d22c38edd14621d246ebdb9d20f54fbc5f3b62310782c3d3422b33a9",
+    "registry_path": "genes/3a1bd515d22c38edd14621d246ebdb9d20f54fbc5f3b62310782c3d3422b33a9",
+    "transport_hints": [
+      {
+        "type": "registry_path",
+        "url": "genes/3a1bd515d22c38edd14621d246ebdb9d20f54fbc5f3b62310782c3d3422b33a9",
+        "priority": 10
+      },
+      {
+        "type": "github_raw",
+        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/3a1bd515d22c38edd14621d246ebdb9d20f54fbc5f3b62310782c3d3422b33a9",
+        "priority": 70
+      }
+    ],
+    "trust_state": "registry_verified"
+  },
+  "hello-world": {
+    "cid": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "expected_sha256": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "schema_version": "akashic.index/v2",
+    "capability": "hello-world",
+    "content_sha256": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "registry_path": "genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "transport_hints": [
+      {
+        "type": "registry_path",
+        "url": "genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+        "priority": 10
+      },
+      {
+        "type": "github_raw",
+        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+        "priority": 70
+      }
+    ],
+    "trust_state": "registry_verified"
+  },
+  "hello-world-test": {
+    "cid": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "expected_sha256": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "life_id": "PGN@L1-G1-HELLO-WORLD-TEST",
+    "creator": "Audrey",
+    "description": "",
+    "registered_at": "2026-05-11",
+    "initial_score": 0,
+    "schema_version": "akashic.index/v2",
+    "capability": "hello-world-test",
+    "content_sha256": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "registry_path": "genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "transport_hints": [
+      {
+        "type": "registry_path",
+        "url": "genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+        "priority": 10
+      },
+      {
+        "type": "github_raw",
+        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+        "priority": 70
+      }
+    ],
+    "trust_state": "registry_verified"
+  },
+  "json-toolkit": {
+    "cid": "5fc18c9d6467827214521738b8e824d4c8245073b44cdbb1052657bdc878d73c",
+    "expected_sha256": "5fc18c9d6467827214521738b8e824d4c8245073b44cdbb1052657bdc878d73c",
+    "life_id": "PGN@L1-G5-JSON-TOOLKIT",
+    "creator": "Audrey",
+    "description": "JSON 工具包基因 - 提供 JSON 解析、验证、格式化功能",
+    "registered_at": "2026-05-11",
+    "initial_score": 0,
+    "schema_version": "akashic.index/v2",
+    "capability": "json-toolkit",
+    "content_sha256": "5fc18c9d6467827214521738b8e824d4c8245073b44cdbb1052657bdc878d73c",
+    "registry_path": "genes/5fc18c9d6467827214521738b8e824d4c8245073b44cdbb1052657bdc878d73c",
+    "transport_hints": [
+      {
+        "type": "registry_path",
+        "url": "genes/5fc18c9d6467827214521738b8e824d4c8245073b44cdbb1052657bdc878d73c",
+        "priority": 10
+      },
+      {
+        "type": "github_raw",
+        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/5fc18c9d6467827214521738b8e824d4c8245073b44cdbb1052657bdc878d73c",
+        "priority": 70
+      }
+    ],
+    "trust_state": "registry_verified"
+  },
+  "log-parser": {
+    "cid": "bc000444ec523efd9927e070fff03e916a766b2e775ef797a9f3c0bb0b1a7f10",
+    "expected_sha256": "bc000444ec523efd9927e070fff03e916a766b2e775ef797a9f3c0bb0b1a7f10",
+    "life_id": "PGN@L1-G4-LOG-PARSER",
+    "creator": "Audrey",
+    "description": "日志解析基因 - 解析和分析日志文件，提取关键信息",
+    "registered_at": "2026-05-11",
+    "initial_score": 0,
+    "schema_version": "akashic.index/v2",
+    "capability": "log-parser",
+    "content_sha256": "bc000444ec523efd9927e070fff03e916a766b2e775ef797a9f3c0bb0b1a7f10",
+    "registry_path": "genes/bc000444ec523efd9927e070fff03e916a766b2e775ef797a9f3c0bb0b1a7f10",
+    "transport_hints": [
+      {
+        "type": "registry_path",
+        "url": "genes/bc000444ec523efd9927e070fff03e916a766b2e775ef797a9f3c0bb0b1a7f10",
+        "priority": 10
+      },
+      {
+        "type": "github_raw",
+        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/bc000444ec523efd9927e070fff03e916a766b2e775ef797a9f3c0bb0b1a7f10",
+        "priority": 70
+      }
+    ],
+    "trust_state": "registry_verified"
+  },
+  "test-gene": {
+    "cid": "0c0e17638a1dffc5417cbb2d814b6213fec5bde267979feb6295877218ed3dbe",
+    "expected_sha256": "0c0e17638a1dffc5417cbb2d814b6213fec5bde267979feb6295877218ed3dbe",
+    "life_id": "PGN@L1-G2-TEST-GENE",
+    "creator": "Audrey",
+    "description": "测试基因用于验证 Gatekeeper v2.0 开放注册功能",
+    "registered_at": "2026-05-11",
+    "initial_score": 0,
+    "schema_version": "akashic.index/v2",
+    "capability": "test-gene",
+    "content_sha256": "0c0e17638a1dffc5417cbb2d814b6213fec5bde267979feb6295877218ed3dbe",
+    "registry_path": "genes/0c0e17638a1dffc5417cbb2d814b6213fec5bde267979feb6295877218ed3dbe",
+    "transport_hints": [
+      {
+        "type": "registry_path",
+        "url": "genes/0c0e17638a1dffc5417cbb2d814b6213fec5bde267979feb6295877218ed3dbe",
+        "priority": 10
+      },
+      {
+        "type": "github_raw",
+        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/0c0e17638a1dffc5417cbb2d814b6213fec5bde267979feb6295877218ed3dbe",
+        "priority": 70
+      }
+    ],
+    "trust_state": "registry_verified"
   }
 }

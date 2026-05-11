@@ -1,46 +1,75 @@
-name: "🔍 每日基因扫描"
+﻿name: Daily Gene Scan
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 每天凌晨 3 点 (UTC)
+    - cron: '0 3 * * *'
   workflow_dispatch:
+    inputs:
+      strict_l2:
+        description: 'Block on content-address mismatches'
+        required: false
+        default: 'false'
+      strict_l4:
+        description: 'Block on quality warnings'
+        required: false
+        default: 'false'
 
 jobs:
-  daily_scan:
+  scan_report:
     runs-on: ubuntu-latest
     steps:
-      - name: "📥 签出代码"
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: "🐍 设置 Python 3.11"
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
-      - name: "🔍 运行安全扫描"
+      - name: Run scan report
         run: |
-          python3 .github/workflows/gatekeeper.py --scan-only
-        continue-on-error: true
+          python3 .github/workflows/gatekeeper.py --scan-only || true
 
-      - name: "📊 检查基因评分"
-        run: |
-          if [ -f .gene_score_log.json ]; then
-            echo "## 📊 基因评分报告" >> $GITHUB_STEP_SUMMARY
-            echo '```json' >> $GITHUB_STEP_SUMMARY
-            cat .gene_score_log.json >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-          fi
-
-      - name: "⚠️ 标记可疑基因"
-        if: failure()
-        run: |
-          echo "⚠️ 发现可疑基因，请人工审核"
-          echo "## ⚠️ 扫描警告" >> $GITHUB_STEP_SUMMARY
-          echo "需要人工审核" >> $GITHUB_STEP_SUMMARY
-
-      - name: "📈 上报统计"
+      - name: Publish audit summary
         if: always()
         run: |
-          echo "## 📈 仓库统计" >> $GITHUB_STEP_SUMMARY
-          echo "- 基因总数: $(ls genes/ 2>/dev/null | wc -l)"
-          echo "- 索引大小: $(wc -l .akashic_index.json 2>/dev/null || echo 0)"
+          echo '## Gatekeeper audit summary' >> "$GITHUB_STEP_SUMMARY"
+          if [ -f .gatekeeper_audit.jsonl ]; then
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            tail -n 40 .gatekeeper_audit.jsonl >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'No audit records generated.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          echo '## Repository stats' >> "$GITHUB_STEP_SUMMARY"
+          echo "- Gene files: $(find genes -maxdepth 1 -type f 2>/dev/null | wc -l)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Index lines: $(wc -l .akashic_index.json 2>/dev/null | awk '{print $1}')" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload audit logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gatekeeper-audit-logs
+          path: |
+            .gatekeeper_audit.jsonl
+            .gatekeeper_rejections.jsonl
+          if-no-files-found: ignore
+
+  strict_gate:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && (inputs.strict_l2 == 'true' || inputs.strict_l4 == 'true')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run strict gate
+        env:
+          GATEKEEPER_STRICT_L2: ${{ inputs.strict_l2 == 'true' && '1' || '0' }}
+          GATEKEEPER_STRICT_L4: ${{ inputs.strict_l4 == 'true' && '1' || '0' }}
+        run: python3 .github/workflows/gatekeeper.py --scan-only

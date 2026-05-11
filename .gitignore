@@ -29,3 +29,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.bak
+
+# Gatekeeper audit outputs
+.gatekeeper_audit.jsonl
+.gatekeeper_rejections.jsonl
