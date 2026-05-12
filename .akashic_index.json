@@ -26,29 +26,30 @@
     "trust_state": "registry_verified"
   },
   "hello-world": {
-    "cid": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
-    "expected_sha256": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "cid": "836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
+    "expected_sha256": "836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
     "schema_version": "akashic.index/v2",
     "capability": "hello-world",
-    "content_sha256": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
-    "registry_path": "genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "content_sha256": "836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
+    "registry_path": "genes/836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
     "transport_hints": [
       {
         "type": "registry_path",
-        "url": "genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+        "url": "genes/836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
         "priority": 10
       },
       {
         "type": "github_raw",
-        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
         "priority": 70
       }
     ],
-    "trust_state": "registry_verified"
+    "trust_state": "registry_verified",
+    "content_id": "836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888"
   },
   "hello-world-test": {
-    "cid": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
-    "expected_sha256": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "cid": "836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
+    "expected_sha256": "836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
     "life_id": "PGN@L1-G1-HELLO-WORLD-TEST",
     "creator": "Audrey",
     "description": "",
@@ -56,21 +57,22 @@
     "initial_score": 0,
     "schema_version": "akashic.index/v2",
     "capability": "hello-world-test",
-    "content_sha256": "88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
-    "registry_path": "genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+    "content_sha256": "836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
+    "registry_path": "genes/836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
     "transport_hints": [
       {
         "type": "registry_path",
-        "url": "genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+        "url": "genes/836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
         "priority": 10
       },
       {
         "type": "github_raw",
-        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/88f3ba1f650689d87f0448340145845e697f57e36af1fcd1812059be497ff88b",
+        "url": "https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888",
         "priority": 70
       }
     ],
-    "trust_state": "registry_verified"
+    "trust_state": "registry_verified",
+    "content_id": "836769a791a8d50490f8c63327d622d3a1fbc0cb79562f66f7d52d7082f18888"
   },
   "json-toolkit": {
     "cid": "5fc18c9d6467827214521738b8e824d4c8245073b44cdbb1052657bdc878d73c",

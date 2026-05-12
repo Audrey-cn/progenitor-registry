@@ -40,7 +40,7 @@
 
 This registry is the **authoritative gene index** for the Progenitor v2.18 ecosystem. It serves two audiences:
 
-**For AI Agents**: The `.akashic_index.json` file maps semantic gene names (like "code-reviewer") to Content IDs (CIDs). When an agent needs a capability, it queries this index to find the gene.
+**For AI Agents**: The `.akashic_index.json` file maps semantic gene names (like "code-reviewer") to `content_sha256`, the primary content identity. CID, GitHub Raw, registry paths, and peer URLs are transport hints that must be verified against the hash.
 
 **For Contributors**: Push a gene file to `genes/`, and the Gatekeeper CI automatically validates and registers it — **no approval required!**
 
@@ -66,18 +66,18 @@ This registry is the **authoritative gene index** for the Progenitor v2.18 ecosy
 ### For AI Agents — Query a Gene
 
 ```python
-from akashic.compass import load_index, resolve_cid_by_name
+from akashic.compass import load_index, resolve_content_by_name
 
 # Load the registry index (auto-fetches from GitHub Raw)
 index = load_index()
 
-# Resolve a capability name to its CID
-cid = resolve_cid_by_name("hello-world", index)
+# Resolve a capability name to its content identity
+content_sha256, transport_hint = resolve_content_by_name("hello-world", index)
 # → "4cf348cfdc6cfb50fd7bdb56a5614f76f41c7a1dacbc8194d6a9ce2a9da2c9f3"
 
 # Then ingest the gene using the Akashic receptor
 from akashic.receptor import phagocytize_gene
-gene = phagocytize_gene(gene_cid=cid)
+gene = phagocytize_gene(content_sha256=content_sha256, transport_hint=transport_hint)
 ```
 
 ### For Contributors — Register a Gene (No Approval Needed!)
@@ -123,8 +123,8 @@ progenitor-registry/
 | Capability | Lineage | Creator | SHA-256 | CID | Status |
 |------|------|------|------|------|------|
 | `code-reviewer` | PGN@L1-G3-CODE-REVIEWER | Audrey | `3a1bd515d22c38ed...` | `3a1bd515d22c38ed...` | Registered |
-| `hello-world` |  |  | `88f3ba1f650689d8...` | `88f3ba1f650689d8...` | Registered |
-| `hello-world-test` | PGN@L1-G1-HELLO-WORLD-TEST | Audrey | `88f3ba1f650689d8...` | `88f3ba1f650689d8...` | Registered |
+| `hello-world` |  |  | `836769a791a8d504...` | `836769a791a8d504...` | Registered |
+| `hello-world-test` | PGN@L1-G1-HELLO-WORLD-TEST | Audrey | `836769a791a8d504...` | `836769a791a8d504...` | Registered |
 | `json-toolkit` | PGN@L1-G5-JSON-TOOLKIT | Audrey | `5fc18c9d64678272...` | `5fc18c9d64678272...` | Registered |
 | `log-parser` | PGN@L1-G4-LOG-PARSER | Audrey | `bc000444ec523efd...` | `bc000444ec523efd...` | Registered |
 | `test-gene` | PGN@L1-G2-TEST-GENE | Audrey | `0c0e17638a1dffc5...` | `0c0e17638a1dffc5...` | Registered |
@@ -151,7 +151,8 @@ When you submit a gene, the Gatekeeper CI automatically checks:
 
 | Field | Requirement |
 |-------|-------------|
-| `cid` | Must match `expected_sha256` |
+| `content_sha256` | Must match the SHA-256 of the gene payload |
+| `cid` | Legacy/transport alias; must match `content_sha256` while present |
 | `life_id` | Must start with `PGN@` (e.g., `PGN@L1-G1-YOUR-GENE`) |
 | `creator` | 🔓 **OPEN** — Any name accepted |
 | `description` | Required (at least 10 characters) |

@@ -1,6 +1,6 @@
 life_id: "PGN@L1-G1-HELLO-WORLD-TEST"
-creator:
-  name: "Audrey"
+creator: "Audrey"
+description: "A minimal hello world capability used to validate registry ingestion."
 
 import time
 
