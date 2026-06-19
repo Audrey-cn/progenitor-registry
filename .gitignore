@@ -33,3 +33,8 @@ Thumbs.db
 # Gatekeeper audit outputs
 .gatekeeper_audit.jsonl
 .gatekeeper_rejections.jsonl
+
+# Dev tooling artifacts (devkit absorbed 2026-06)
+_test_data/
+.runtime/
+reports/
