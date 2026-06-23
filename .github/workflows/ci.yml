@@ -10,11 +10,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout registry
+        uses: actions/checkout@v4
+        with:
+          path: progenitor-registry
+      # The L6 capability-scope check reuses the protocol's capability module as the single
+      # source of truth; check it out as a sibling so those tests run (else they skip).
+      - name: Checkout sibling protocol
+        uses: actions/checkout@v4
+        with:
+          repository: Audrey-cn/progenitor-protocol
+          path: progenitor-protocol
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Install test deps
         run: pip install --quiet pytest
       - name: Run tests
+        working-directory: progenitor-registry
         run: python -m pytest tests/ -q
