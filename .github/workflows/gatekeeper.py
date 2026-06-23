@@ -12,6 +12,7 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 
 GENE_DIR = Path("genes")
+SIGNATURES_DIR = Path("signatures")  # optional per-gene creator signatures: signatures/<sha>.sig
 INDEX_FILE = Path(".akashic_index.json")
 README_FILE = Path("README.md")
 SCORE_FILE = Path(".gene_score_log.json")
@@ -273,6 +274,46 @@ def validate_l6_capability_scope(gf: Path) -> tuple[bool, str]:
     return False, f"declares purity: pure but violates the allowlist — {reason}"
 
 
+def _load_trust_module():
+    """Load the registry's trust module (keyring verification). None if unavailable."""
+    tools_dir = Path(__file__).resolve().parents[2] / "tools"
+    if tools_dir.is_dir() and str(tools_dir) not in sys.path:
+        sys.path.insert(0, str(tools_dir))
+    try:
+        import trust
+        return trust
+    except Exception:
+        return None
+
+
+def gene_trust_state(gf: Path, meta: dict, sha: str) -> str:
+    """Determine a gene's trust_state (docs/VISION.md, pillar A).
+
+    If a creator-signature sidecar ``signatures/<sha>.sig`` is present, verify it against the
+    trust keyring and confirm it covers this exact content and matches the declared creator →
+    ``creator-signed:<owner>``. A present-but-bad sidecar → ``creator-signature-invalid``.
+    No sidecar → ``registry_verified`` (the gatekeeper still vouched for it)."""
+    sig_path = SIGNATURES_DIR / f"{sha}.sig"
+    if not sig_path.exists():
+        return "registry_verified"
+    trust = _load_trust_module()
+    if trust is None:
+        return "registry_verified"  # cannot verify here → no upgrade, no false alarm
+    try:
+        envelope = json.loads(sig_path.read_text(encoding="utf-8"))
+        ok, info = trust.verify_signed_document(envelope)
+    except Exception:
+        return "creator-signature-invalid"
+    if not ok:
+        return "creator-signature-invalid"
+    if envelope.get("content_sha256") != sha:
+        return "creator-signature-invalid"
+    declared = meta.get("creator")
+    if declared and info.get("owner") and declared != info.get("owner"):
+        return "creator-signature-invalid"
+    return f"creator-signed:{info.get('owner')}"
+
+
 def audit_gene(gf: Path, creator_counts: dict) -> tuple[bool, dict, str]:
     meta, _ = extract_yaml_header(gf)
     creator = meta.get("creator", "Anonymous")
@@ -362,7 +403,7 @@ def main() -> int:
                 {"type": "registry_path", "url": f"genes/{sha}", "priority": 10},
                 {"type": "github_raw", "url": f"https://raw.githubusercontent.com/Audrey-cn/progenitor-registry/main/genes/{sha}", "priority": 70},
             ],
-            "trust_state": "registry_verified",
+            "trust_state": gene_trust_state(gf, meta, sha),
             "life_id": meta.get("life_id", ""),
             "creator": creator,
             "description": meta.get("description", ""),
