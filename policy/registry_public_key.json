@@ -1,0 +1,11 @@
+{
+  "schema_version": "akashic.node-identity/v1",
+  "node_id": "progenitor-registry",
+  "key_type": "progenitor-rsa-sha256-v1",
+  "public_key": {
+    "key_type": "progenitor-rsa-sha256-v1",
+    "n": "xsGf15m3fq0Ox4meCgG2BPAMCvkO39rttv6H79vIgpkMh6Z_TrRQyc8V4HBlSVJHBfItvHbMVZxw645lEorOX2lfu4URA5Z4HkvfKikgEeiOWMaAANaoTwuah8ys0MydmM50z7609QGLx4VWLAvWe5RfCy_PCwr61hFriWKl4q0",
+    "e": 65537
+  },
+  "public_key_id": "28af8326ccba8539703b182d0fe44da250e5c66538b1ecf3a1591ace1ed41c61"
+}
