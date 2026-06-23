@@ -34,8 +34,13 @@ def _load_identity_module():
 
 
 def load_keyring(path=None):
-    """Return the list of trusted-key records, or [] if the keyring is absent."""
-    path = Path(path) if path else KEYRING_FILE
+    """Return the list of trusted-key records, or [] if the keyring is absent.
+
+    Path resolution: explicit ``path`` arg > ``PROGENITOR_TRUST_KEYRING_FILE`` env > the bundled
+    ``policy/trusted_keys.json``. The env override lets a host pin its own keyring."""
+    if path is None:
+        path = os.environ.get("PROGENITOR_TRUST_KEYRING_FILE") or KEYRING_FILE
+    path = Path(path)
     if not path.exists():
         return []
     data = json.loads(path.read_text(encoding="utf-8"))
