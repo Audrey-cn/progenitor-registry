@@ -239,6 +239,40 @@ def update_readme(index: dict) -> bool:
     return True
 
 
+def _load_capability_module():
+    """Locate the sibling protocol's capability module (single source of truth for the
+    Gene Contract v2 AST allowlist). Returns the module, or None if the protocol repo is not
+    checked out alongside this one (in which case L6 degrades to a skip)."""
+    here = Path(__file__).resolve()
+    registry_root = here.parents[2]  # .github/workflows/gatekeeper.py -> repo root
+    protocol_dir = Path(os.environ.get("PROGENITOR_PROTOCOL_DIR", registry_root.parent / "progenitor-protocol"))
+    hatchery = protocol_dir / "hatchery"
+    if hatchery.is_dir() and str(hatchery) not in sys.path:
+        sys.path.insert(0, str(hatchery))
+    try:
+        import capability
+        return capability
+    except Exception:
+        return None
+
+
+def validate_l6_capability_scope(gf: Path) -> tuple[bool, str]:
+    """[L6] Capability honesty: a gene declaring ``purity: pure`` must actually pass the
+    protocol's AST allowlist (no ambient authority). Genes that make no purity claim are
+    unaffected (backward compatible). See docs/VISION.md (pillar B)."""
+    cap = _load_capability_module()
+    if cap is None:
+        return True, "L6 skipped — sibling protocol capability module unavailable"
+    content = gf.read_text(encoding="utf-8-sig", errors="ignore")
+    manifest = cap.parse_capability_manifest(content)
+    if manifest.get("purity") != "pure":
+        return True, "no pure claim to verify (effectful default)"
+    ok, reason = cap.check_pure_safe(content)
+    if ok:
+        return True, "declared purity: pure and passes the AST allowlist"
+    return False, f"declares purity: pure but violates the allowlist — {reason}"
+
+
 def audit_gene(gf: Path, creator_counts: dict) -> tuple[bool, dict, str]:
     meta, _ = extract_yaml_header(gf)
     creator = meta.get("creator", "Anonymous")
@@ -275,6 +309,12 @@ def audit_gene(gf: Path, creator_counts: dict) -> tuple[bool, dict, str]:
     result = make_result(gf, "L5", "pass" if passed_l5 else "fail", msg_l5, meta, strict=True, reformable=False)
     record_audit(result)
     if not passed_l5:
+        return False, meta, sha
+
+    passed_l6, msg_l6 = validate_l6_capability_scope(gf)
+    result = make_result(gf, "L6", "pass" if passed_l6 else "fail", msg_l6, meta, strict=True, reformable=True)
+    record_audit(result)
+    if not passed_l6:
         return False, meta, sha
 
     return True, meta, sha

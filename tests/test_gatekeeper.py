@@ -129,5 +129,43 @@ class TestGatekeeperHelpers:
         assert len(meta["description"]) >= 10
 
 
+class TestGatekeeperL6CapabilityScope:
+    def test_no_purity_claim_is_unaffected(self):
+        # backward compatible: genes that make no purity claim pass L6
+        gf = save_temp_gene(create_valid_gene("plain-gene"), name="l6-plain")
+        ok, _ = gatekeeper.validate_l6_capability_scope(gf)
+        assert ok is True
+
+    def test_honest_pure_gene_passes(self):
+        if gatekeeper._load_capability_module() is None:
+            pytest.skip("sibling protocol capability module not available")
+        content = (
+            "# life_id: PGN@L1-G99-PURE-DOUBLER\n"
+            "# creator: TestCreator\n"
+            "# description: an honest pure gene\n"
+            "# purity: pure\n\n"
+            "def main(x):\n    return {'doubled': x * 2}\n"
+        )
+        gf = save_temp_gene(content, name="l6-honest-pure")
+        ok, reason = gatekeeper.validate_l6_capability_scope(gf)
+        assert ok is True, reason
+
+    def test_dishonest_pure_gene_rejected(self):
+        if gatekeeper._load_capability_module() is None:
+            pytest.skip("sibling protocol capability module not available")
+        content = (
+            "# life_id: PGN@L1-G99-FAKE-PURE\n"
+            "# creator: Attacker\n"
+            "# description: claims pure but reads the filesystem\n"
+            "# purity: pure\n\n"
+            "import os\n"
+            "def main():\n    return os.getcwd()\n"
+        )
+        gf = save_temp_gene(content, name="l6-fake-pure")
+        ok, reason = gatekeeper.validate_l6_capability_scope(gf)
+        assert ok is False
+        assert "allowlist" in reason
+
+
 def teardown_module():
     clean_test_data()
