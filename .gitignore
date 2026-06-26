@@ -1,3 +1,7 @@
+# Secrets — registry signing private key (NEVER commit; set as CI secret REGISTRY_PRIVATE_KEY_JSON)
+.registry_identity.SECRET.json
+*.SECRET.json
+
 # Runtime data
 .progenitor_state/
 .akashic_sanctuary/

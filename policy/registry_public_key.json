@@ -1,11 +1,12 @@
 {
   "schema_version": "akashic.node-identity/v1",
-  "node_id": "progenitor-registry",
-  "key_type": "progenitor-rsa-sha256-v1",
+  "node_id": "9283bccd2275ace0dbdccf48b7d8ff93b39c449de1d02e53c11b7baad9398395",
+  "label": "progenitor-registry",
+  "key_type": "progenitor-rsa-pkcs1-sha256-v1",
   "public_key": {
-    "key_type": "progenitor-rsa-sha256-v1",
-    "n": "xsGf15m3fq0Ox4meCgG2BPAMCvkO39rttv6H79vIgpkMh6Z_TrRQyc8V4HBlSVJHBfItvHbMVZxw645lEorOX2lfu4URA5Z4HkvfKikgEeiOWMaAANaoTwuah8ys0MydmM50z7609QGLx4VWLAvWe5RfCy_PCwr61hFriWKl4q0",
+    "key_type": "progenitor-rsa-pkcs1-sha256-v1",
+    "n": "ZRM8Gjp922d9mth97wQcqyVhvCzSQCSt5DduHe_KH8zB2dAldhIdIkqPfRIoFN9IxUxYkrUod4FoVjWqgqRUZoaOXbndCZeOY4OfqXgKEY52t4PeV0W2Kq_lL94Zt0M-tTuJmF17Dkpvn4RH9Wze17cUq9L8IV4H7tuGJyiu4u0s2N5HVjhDrGDtKWEZQ_0nZ_OK98pVEk25ELwnUqzabvaGAZdEvEdrKfNoeyM3jIxYqkgf04wfBXQDms6EJ5tazq8GyKNOZMNrq4AnGQXkas1Z2bAb0EdgLczUKUcJ3ogtT0ZYfYzaTSbGZ2TgsIT5Y4RyNEnJyBza2YERexJlYQ",
     "e": 65537
   },
-  "public_key_id": "28af8326ccba8539703b182d0fe44da250e5c66538b1ecf3a1591ace1ed41c61"
+  "public_key_id": "9283bccd2275ace0dbdccf48b7d8ff93b39c449de1d02e53c11b7baad9398395"
 }
