@@ -1,4 +1,4 @@
-﻿name: Daily Gene Scan
+name: Daily Gene Scan
 
 on:
   schedule:
@@ -41,6 +41,8 @@ jobs:
           else
             echo 'No audit records generated.' >> "$GITHUB_STEP_SUMMARY"
           fi
+          echo '' >> "$GITHUB_STEP_SUMMARY"
+          python3 tools/rejection_report.py >> "$GITHUB_STEP_SUMMARY" || true
           echo '' >> "$GITHUB_STEP_SUMMARY"
           echo '## Repository stats' >> "$GITHUB_STEP_SUMMARY"
           echo "- Gene files: $(find genes -maxdepth 1 -type f 2>/dev/null | wc -l)" >> "$GITHUB_STEP_SUMMARY"
