@@ -42,7 +42,7 @@ This registry is the **authoritative gene index** for the Progenitor ecosystem (
 
 **For AI Agents**: The `.akashic_index.json` file maps semantic gene names (like "code-reviewer") to `content_sha256`, the primary content identity. CID, GitHub Raw, registry paths, and peer URLs are transport hints that must be verified against the hash.
 
-**For Contributors**: Push a gene file to `genes/`, and the Gatekeeper CI automatically validates and registers it — **no approval required!**
+**For Contributors**: Push a gene file to `genes/`, and the Gatekeeper CI validates it automatically (L0-L6) and registers it — **open registration, no human approval gate**. Signing your gene upgrades its trust.
 
 ```
   Contributor                    Agent (network)
@@ -80,7 +80,7 @@ from akashic.receptor import phagocytize_gene
 gene = phagocytize_gene(content_sha256=content_sha256, transport_hint=transport_hint)
 ```
 
-### For Contributors — Register a Gene (No Approval Needed!)
+### For Contributors — Register a Gene (Open Registration)
 
 1. **Fork** this repository
 2. **Create** your gene file with YAML header in `genes/`:
@@ -136,7 +136,7 @@ progenitor-registry/
 
 **Read the full contributor guide: [CONTRIBUTING.md](CONTRIBUTING.md)** — scaffold → sign → PR in 5 minutes.
 
-**Welcome to the open gene ecosystem!** Anyone can contribute genes to the Progenitor Registry — **no approval required!**
+**Welcome to the open gene ecosystem!** Anyone can contribute genes to the Progenitor Registry — the Gatekeeper validates automatically; **signing upgrades your gene's trust**.
 
 ### Gatekeeper CI Validation (v2.0)
 
@@ -160,6 +160,8 @@ When you submit a gene, the Gatekeeper CI automatically checks:
 | `creator` | 🔓 **OPEN** — Any name accepted |
 | `description` | Required (at least 10 characters) |
 | File location | `genes/{sha256}` |
+
+**Full flow (scaffold → sign → PR, EN/中文): [CONTRIBUTING.md](CONTRIBUTING.md)** — a first-time signature shows creator-signature-pending-review until the maintainer adds your key; that is normal.
 
 ### Quick Contribution Steps
 
