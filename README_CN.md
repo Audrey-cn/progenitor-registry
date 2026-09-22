@@ -38,7 +38,7 @@
 
 ## 📖 功能
 
-本注册表是 Progenitor v2.18 生态系统的**权威基因索引**，服务两类用户：
+本注册表是 Progenitor 生态系统的**权威基因索引**（协议发布 [2.2.0-Federation-Proof](https://github.com/Audrey-cn/progenitor-protocol/releases/tag/v2.2.0-Federation-Proof)），服务两类用户：
 
 **面向 AI Agent**：`.akashic_index.json` 文件将语义基因名（如 "code-reviewer"）映射到内容标识符（CID）。当 Agent 需要某个能力，查询此索引即可定位基因。
 

@@ -38,7 +38,7 @@
 
 ## 📖 What It Does
 
-This registry is the **authoritative gene index** for the Progenitor v2.18 ecosystem. It serves two audiences:
+This registry is the **authoritative gene index** for the Progenitor ecosystem (protocol release [2.2.0-Federation-Proof](https://github.com/Audrey-cn/progenitor-protocol/releases/tag/v2.2.0-Federation-Proof)). It serves two audiences:
 
 **For AI Agents**: The `.akashic_index.json` file maps semantic gene names (like "code-reviewer") to `content_sha256`, the primary content identity. CID, GitHub Raw, registry paths, and peer URLs are transport hints that must be verified against the hash.
 
