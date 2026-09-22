@@ -305,6 +305,20 @@ def gene_trust_state(gf: Path, meta: dict, sha: str) -> str:
     except Exception:
         return "creator-signature-invalid"
     if not ok:
+        # Distinguish a first-time contributor (well-formed signature from a key the keyring
+        # does not know yet — the maintainer adds the key in review) from a genuinely bad
+        # signature. Self-consistency: the envelope embeds its public identity; if the
+        # signature verifies against it and covers this content, it is pending review.
+        si = trust._load_identity_module()
+        embedded = envelope.get("public_key")
+        self_ok = False
+        if embedded:
+            try:
+                self_ok = si.verify_document(envelope, embedded)
+            except Exception:
+                self_ok = False
+        if self_ok and envelope.get("content_sha256") == sha:
+            return "creator-signature-pending-review"
         return "creator-signature-invalid"
     if envelope.get("content_sha256") != sha:
         return "creator-signature-invalid"

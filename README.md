@@ -134,6 +134,8 @@ progenitor-registry/
 
 ## 🤝 Contributing (🔓 Open Registration)
 
+**Read the full contributor guide: [CONTRIBUTING.md](CONTRIBUTING.md)** — scaffold → sign → PR in 5 minutes.
+
 **Welcome to the open gene ecosystem!** Anyone can contribute genes to the Progenitor Registry — **no approval required!**
 
 ### Gatekeeper CI Validation (v2.0)

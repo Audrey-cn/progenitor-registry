@@ -72,21 +72,38 @@ def test_creator_mismatch_is_invalid(tmp_path, monkeypatch):
     assert gatekeeper.gene_trust_state(gf, {"creator": "Bob"}, sha) == "creator-signature-invalid"
 
 
-def test_untrusted_signer_is_invalid(tmp_path, monkeypatch):
+def test_unknown_signer_is_pending_review(tmp_path, monkeypatch):
+    """A first-time contributor: well-formed signature, signer not yet in the keyring.
+    Must be *pending review*, not invalid — the maintainer adds the key in review."""
     _trust_or_skip()
-    signer = _creator_identity("Stranger")
-    trusted = _creator_identity("Trusted")
-    _pin_keyring(tmp_path, monkeypatch, "Trusted", trusted)  # keyring trusts 'Trusted', not the signer
+    signer = _creator_identity("NewContributor")
     sigs = tmp_path / "signatures"
     sigs.mkdir()
     monkeypatch.setattr(gatekeeper, "SIGNATURES_DIR", sigs)
 
-    gf = save_temp_gene(create_valid_gene("stranger", creator="Stranger"), name="stranger-gene")
+    gf = save_temp_gene(create_valid_gene("firstpr", creator="NewContributor"), name="firstpr-gene")
     sha = gatekeeper.compute_sha256(gf)
     signed = sign_gene.build_gene_signature(gf, signer)
+    assert signed.get("public_key"), "envelope must embed the creator public identity"
     (sigs / f"{sha}.sig").write_text(json.dumps(signed), encoding="utf-8")
 
-    assert gatekeeper.gene_trust_state(gf, {"creator": "Stranger"}, sha) == "creator-signature-invalid"
+    assert gatekeeper.gene_trust_state(gf, {"creator": "NewContributor"}, sha) == "creator-signature-pending-review"
+
+
+def test_tampered_signature_is_invalid(tmp_path, monkeypatch):
+    _trust_or_skip()
+    signer = _creator_identity("Honest")
+    sigs = tmp_path / "signatures"
+    sigs.mkdir()
+    monkeypatch.setattr(gatekeeper, "SIGNATURES_DIR", sigs)
+
+    gf = save_temp_gene(create_valid_gene("honest"), name="honest-gene")
+    sha = gatekeeper.compute_sha256(gf)
+    signed = sign_gene.build_gene_signature(gf, signer)
+    signed["content_sha256"] = "0" * 64  # tamper the covered content hash
+    (sigs / f"{sha}.sig").write_text(json.dumps(signed), encoding="utf-8")
+
+    assert gatekeeper.gene_trust_state(gf, {"creator": "Honest"}, sha) == "creator-signature-invalid"
 
 
 def teardown_module():
