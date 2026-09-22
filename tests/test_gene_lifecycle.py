@@ -33,7 +33,7 @@ def _isolate_gatekeeper(monkeypatch, tmp_path):
 def _gene_named_by_hash(tmp_path: Path, content: str) -> Path:
     sha = hashlib.sha256(content.encode()).hexdigest()
     gf = tmp_path / sha
-    gf.write_text(content, encoding="utf-8")
+    gf.write_text(content, encoding="utf-8", newline="")
     return gf
 
 
@@ -58,7 +58,7 @@ def test_invalid_lineage_rejected(tmp_path):
 def test_content_address_mismatch_rejected(tmp_path):
     content = create_valid_gene("mismatch", description="A clearly long enough description")
     gf = tmp_path / "wrong-filename"  # NOT named by its sha
-    gf.write_text(content, encoding="utf-8")
+    gf.write_text(content, encoding="utf-8", newline="")
     passed, _, _ = gatekeeper.audit_gene(gf, {})
     assert passed is False  # L2 content-address (strict by default)
 

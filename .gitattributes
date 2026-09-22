@@ -1,0 +1,9 @@
+# Line-ending governance (portability).
+#
+# Content-addressed artifacts MUST stay byte-exact: a gene is its SHA-256, and the
+# signed index is verified against exact bytes. If git normalizes line endings on
+# checkout (e.g. Windows core.autocrlf), every hash/signature check breaks.
+* text=auto eol=lf
+genes/* -text
+.akashic_index.json -text
+.akashic_index.json.sig -text

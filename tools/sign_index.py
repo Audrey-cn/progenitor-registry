@@ -75,7 +75,7 @@ def main() -> None:
     index_bytes = INDEX_FILE.read_bytes()
     signed_envelope = build_signature_envelope(index_bytes, identity)
 
-    SIG_FILE.write_text(json.dumps(signed_envelope, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    SIG_FILE.write_text(json.dumps(signed_envelope, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="")
     print(f"[sign_index] ✅ Signed {INDEX_FILE.name}")
     print(f"  index_sha256:  {signed_envelope['index_sha256']}")
     print(f"  public_key_id: {signed_envelope.get('signature', {}).get('public_key_id', 'N/A')}")

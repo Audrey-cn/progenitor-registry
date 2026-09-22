@@ -61,7 +61,7 @@ def main() -> int:
     signed = build_gene_signature(gene_path, identity)
     SIGNATURES_DIR.mkdir(exist_ok=True)
     out = SIGNATURES_DIR / f"{signed['content_sha256']}.sig"
-    out.write_text(json.dumps(signed, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    out.write_text(json.dumps(signed, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="")
     print(f"[sign_gene] ✅ signed {gene_path.name} -> {out}")
     print(f"  content_sha256: {signed['content_sha256']}")
     print(f"  signer key_id:  {signed.get('signature', {}).get('public_key_id', 'N/A')}")

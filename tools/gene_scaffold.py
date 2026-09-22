@@ -104,7 +104,7 @@ def scaffold_interactive():
             print("已取消")
             sys.exit(0)
 
-    with open(output_path, "w", encoding="utf-8") as f:
+    with open(output_path, "w", encoding="utf-8", newline="") as f:
         f.write(content)
 
     sha = compute_sha256(output_path)
