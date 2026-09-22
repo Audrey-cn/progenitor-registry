@@ -34,7 +34,7 @@ def load_index():
 def save_index(index):
     index_path = REGISTRY_DIR / ".akashic_index.json"
     tmp_path = REGISTRY_DIR / ".akashic_index.json.tmp"
-    with open(tmp_path, "w", encoding="utf-8") as f:
+    with open(tmp_path, "w", encoding="utf-8", newline="") as f:
         json.dump(index, f, ensure_ascii=False, indent=2)
     tmp_path.replace(index_path)
 

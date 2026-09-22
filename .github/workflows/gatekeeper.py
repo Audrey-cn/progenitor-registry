@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 from __future__ import annotations
 
 import argparse
@@ -189,7 +189,7 @@ def load_index() -> dict:
 
 def save_index(index: dict) -> None:
     tmp = INDEX_FILE.with_suffix(".json.tmp")
-    tmp.write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")
+    tmp.write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8", newline="")
     tmp.replace(INDEX_FILE)
 
 

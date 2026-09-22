@@ -105,14 +105,14 @@ class TestGatekeeperL2ContentAddress:
         content = create_valid_gene("hash-gene")
         sha = hashlib.sha256(content.encode()).hexdigest()
         gf = tmp_path / sha
-        gf.write_text(content, encoding="utf-8")
+        gf.write_text(content, encoding="utf-8", newline="")
         assert gatekeeper.compute_sha256(gf) == sha
         ok, _ = gatekeeper.validate_l2_content_address(gf, sha)
         assert ok is True
 
     def test_filename_mismatch_rejected(self, tmp_path):
         gf = tmp_path / "not-a-content-hash"
-        gf.write_text("data", encoding="utf-8")
+        gf.write_text("data", encoding="utf-8", newline="")
         ok, _ = gatekeeper.validate_l2_content_address(gf, gatekeeper.compute_sha256(gf))
         assert ok is False
 

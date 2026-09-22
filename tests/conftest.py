@@ -72,7 +72,7 @@ def save_temp_gene(content, name=None):
         sha = hashlib.sha256(content.encode()).hexdigest()
         name = sha
     filepath = TEST_DATA_DIR / name
-    filepath.write_text(content, encoding="utf-8")
+    filepath.write_text(content, encoding="utf-8", newline="")
     return filepath
 
 
