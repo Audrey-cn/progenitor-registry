@@ -50,8 +50,8 @@ This registry is the **authoritative gene index** for the Progenitor v2.18 ecosy
   Submit PR → genes/{CID}         Query "hello-world"
                 ↓                      ↓
            Gatekeeper CI           Read .akashic_index.json
-           ├─ L1 Hash Check            ↓
-           ├─ L2 Lineage Verify     Map to CID
+           ├─ L1 Lineage Verify        ↓
+           ├─ L2 Content-Address    Map to CID
            ├─ L3 Creator Check (Open)   ↓
            ├─ L4 Quality Gate      Pull genes/{CID}
            └─ L5 Security Scan         ↓
@@ -141,11 +141,12 @@ progenitor-registry/
 When you submit a gene, the Gatekeeper CI automatically checks:
 
 1. **L0 Rate Limit** — Max 5 genes per PR, 20 genes per creator per day
-2. **L1 Hash Check** — SHA-256 integrity verification
-3. **L2 Lineage Verify** — `life_id` must start with `PGN@`
+2. **L1 Lineage Verify** — `life_id` must start with `PGN@`
+3. **L2 Content-Address Check** — SHA-256 integrity verification (filename must equal the content hash)
 4. **L3 Creator Check** — 🔓 **OPEN** — Anyone can contribute
 5. **L4 Quality Gate** — Minimum quality standards (description, size limits)
 6. **L5 Security Scan** — Detects dangerous code patterns
+7. **L6 Capability Honesty** — a gene declaring `purity: pure` must actually pass the pure-sandbox
 
 ### Gene Registration Requirements
 
